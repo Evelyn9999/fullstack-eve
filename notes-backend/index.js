@@ -3,8 +3,8 @@ const app = express()
 const cors = require('cors')
 
 app.use(cors())
-// --- middleware: parse JSON
-app.use(express.json())
+app.use(express.json())  // --- middleware: parse JSON
+app.use(require('express').static('dist'));   // <-- serve frontend build
 
 // --- middleware: request logger
 const requestLogger = (req, res, next) => {
