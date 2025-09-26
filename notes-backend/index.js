@@ -1,8 +1,31 @@
 const express = require('express')
-const app = express()
+const mongoose = require('mongoose')
 
+const app = express()
 app.use(express.json())  // --- middleware: parse JSON
 app.use(require('express').static('dist'));   // <-- serve frontend build
+
+// --- connect Mongo ---
+const password = process.argv[2]   // temporary, later we’ll use .env
+const url = `mongodb+srv://evelyn:${password}@cluster0.3tkz1yq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+
+mongoose.set('strictQuery', false)
+mongoose.connect(url)
+
+const noteSchema = new mongoose.Schema({
+    content: String,
+    important: Boolean,
+})
+
+noteSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject._id
+        delete returnedObject.__v
+    }
+})
+
+const Note = mongoose.model('Note', noteSchema)
 
 // --- middleware: request logger
 const requestLogger = (req, res, next) => {
@@ -26,7 +49,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/notes', (req, res) => {
-    res.json(notes) // 200 by default
+    Note.find({}).then(notes => {
+        res.json(notes)
+    })
 })
 
 app.get('/api/notes/:id', (req, res) => {
