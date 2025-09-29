@@ -63,18 +63,16 @@ app.delete('/api/notes/:id', (req, res, next) => {
 app.put('/api/notes/:id', (req, res, next) => {
     const {content, important} = req.body
 
-    // Option A: update in one go
-    Note.findByIdAndUpdate(
-        req.params.id,
-        {content, important},
-        {new: true} // return updated doc
-    )
+    Note.findById(req.params.id)
         .then(updated => {
-            if (!updated) =>
-            res.status(404).end()
-            res.json(updated)
+            if (!updated) return res.status(404).end()
+            updated.content = content
+            updated.important = important
+            return updated.save().then(updatedNote => {
+                res.json(updatedNote)
+            })
         })
-        .catch(next)
+        .catch(error => next(error))
 })
 
 // --- middleware: unknown endpoint (after routes)
