@@ -17,12 +17,6 @@ const requestLogger = (req, res, next) => {
 }
 app.use(requestLogger)
 
-let notes = [
-    { id: '1', content: 'HTML is easy', important: true },
-    { id: '2', content: 'Browser can execute only JavaScript', important: false },
-    { id: '3', content: 'GET and POST are the most important methods of HTTP protocol', important: true },
-]
-
 // --- routes
 app.get('/', (req, res) => {
     res.send('<h1>Hello World!</h1>')
@@ -34,11 +28,13 @@ app.get('/api/notes', (req, res) => {
     })
 })
 
-app.get('/api/notes/:id', (req, res) => {
-    const id = req.params.id // ids are strings in your data
-    const note = notes.find(n => n.id === id)
-    if (!note) return res.status(404).end()
-    res.json(note)
+app.get('/api/notes/:id', (req, res, next) => {
+    Note.findById(req.params.id)
+        .then(note => {
+            if (!note) return res.status(404).end()
+            res.json(note)
+    })
+        .catch(next) // e.g. CastError for bad id
 })
 
 app.post('/api/notes', (req, res, next) => {
@@ -46,23 +42,39 @@ app.post('/api/notes', (req, res, next) => {
     if (!body.content) {
         return res.status(400).json({ error: 'content missing' })
     }
-    const generateId = () => {
-        const maxId = notes.length > 0 ? Math.max(...notes.map(n => Number(n.id))) : 0
-        return String(maxId + 1)
-    }
-    const note = {
-        id: generateId(),
+    const note = new Note({
         content: body.content,
         important: body.important || false,
-    }
-    notes = notes.concat(note)
-    res.status(201).json(note)
+    })
+    note.save()
+        .then(savedNoted => {
+        res.json(savedNoted)
+    })
+        .catch(error => next(error))
 })
 
-app.delete('/api/notes/:id', (req, res) => {
-    const id = req.params.id
-    notes = notes.filter(n => n.id !== id)
-    res.status(204).end()
+app.delete('/api/notes/:id', (req, res, next) => {
+    Note.findByIdAndDelete(req.params.id)
+        .then(() => res.status(204).end())
+        .catch(next)
+})
+
+/** Update note (content and/or important) */
+app.put('/api/notes/:id', (req, res, next) => {
+    const {content, important} = req.body
+
+    // Option A: update in one go
+    Note.findByIdAndUpdate(
+        req.params.id,
+        {content, important},
+        {new: true} // return updated doc
+    )
+        .then(updated => {
+            if (!updated) =>
+            res.status(404).end()
+            res.json(updated)
+        })
+        .catch(next)
 })
 
 // --- middleware: unknown endpoint (after routes)
