@@ -9,7 +9,7 @@ POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-  "content": "Testing new note via HTTP file",
+  "content": "Testing new note of DBtest",
   "important": true
 }
 
@@ -23,4 +23,4 @@ Content-Type: application/json
 }
 
 ### Delete
-DELETE http://localhost:3001/api/notes/68d6d3e300790cafff7f82d6
+DELETE http://localhost:3001/api/notes/68da611e5eebef3755b2a49f

@@ -8,6 +8,7 @@
     "deploy:full": "npm run build:ui && git add . && git commit -m \"uibuild\" && git push",
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "dev:testdb": "cross-env NODE_ENV=test nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
@@ -23,6 +24,7 @@
     "mongoose": "^8.18.2"
   },
   "devDependencies": {
+    "cross-env": "^10.0.0",
     "nodemon": "^3.1.10",
     "shx": "^0.4.0"
   }
