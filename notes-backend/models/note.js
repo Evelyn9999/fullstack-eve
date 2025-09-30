@@ -2,13 +2,6 @@ const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
 
-// Keep logs generic to avoid printing credentials
-console.log('Connecting to MongoDB…', isTest ? '(TEST DB)' : '(DEV DB)')
-mongoose
-  .connect(url)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err.message))
-
 const noteSchema = new mongoose.Schema({
   content: String,
   important: Boolean,

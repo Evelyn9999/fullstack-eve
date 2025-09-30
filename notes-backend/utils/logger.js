@@ -1,13 +1,13 @@
 const { NODE_ENV } = require('./config')
 
 const info = (...params) => {
-    if (NODE_ENV !== 'test') {
-        console.log(...params)
-    }
+  if (NODE_ENV !== 'test') {
+    console.log(...params)
+  }
 }
 
 const error = (...params) => {
-    console.error(...params)
+  console.error(...params)
 }
 
 module.exports = { info, error }
