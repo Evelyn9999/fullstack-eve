@@ -1,0 +1,8 @@
+### Create
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "content": "Testing new note of DBtest",
+  "important": true
+}
