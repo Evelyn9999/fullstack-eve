@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 
 const noteSchema = new mongoose.Schema({
-  content: String,
+  content: { type: String, required: true, minlength: 5 },
   important: Boolean,
 })
 

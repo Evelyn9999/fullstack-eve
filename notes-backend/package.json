@@ -6,9 +6,8 @@
   "scripts": {
     "build:ui": "shx rm -rf dist && cd ../introdemo && npm ci && npm run build && shx cp -r dist ../notes-backend",
     "deploy:full": "npm run build:ui && git add . && git commit -m \"uibuild\" && git push",
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "dev:testdb": "cross-env NODE_ENV=test nodemon index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
     "test": "cross-env NODE_ENV=test node --test",
     "lint": "eslint ."
   },
@@ -32,6 +31,7 @@
     "eslint": "^9.36.0",
     "globals": "^16.4.0",
     "nodemon": "^3.1.10",
-    "shx": "^0.4.0"
+    "shx": "^0.4.0",
+    "supertest": "^7.1.4"
   }
 }

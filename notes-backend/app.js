@@ -8,7 +8,7 @@ const notesRouter = require('./controllers/notes')
 mongoose.set('strictQuery', false)
 
 // Keep logs generic to avoid printing credentials
-logger.info('Connecting to MongoDB…', config.NODE_ENV === 'test' ? '(TEST DB)' : '')
+logger.info('Connecting to MongoDB…', config.NODE_ENV === 'test' ? '(TEST DB)' : '(DEV/PROD)')
 mongoose.connect(config.MONGODB_URI)
   .then(() => logger.info('Connected to MongoDB'))
   .catch(err => logger.error('MongoDB connection error:', err.message))
